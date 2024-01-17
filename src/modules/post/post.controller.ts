@@ -14,7 +14,7 @@ export class PostController {
   }
 
   // retrieve all posts with their associated comments
-  @Get('all')
+  @Get('allPostsWithComments')
   allPostsWithComments() {
     return this.postService.allPostsWithComments();
   }

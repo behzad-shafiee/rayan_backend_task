@@ -55,16 +55,13 @@ export class PostService {
         Post,
         'post',
       );
-      const posts = await queryBuilder
+      const { entities } = await queryBuilder
         .leftJoinAndSelect('post.comments', 'comments')
         .select(['post.title', 'post.content', 'comments.content'])
         .getRawAndEntities();
-      const query = queryBuilder.getQuery();
-      console.log(query);
-
       return {
         message: 'all posts with their associated comments',
-        posts,
+        posts: entities,
       };
     } catch (error) {
       throw new HttpException(

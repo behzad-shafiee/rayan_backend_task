@@ -7,6 +7,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { CommentModule } from './modules/comment/comment.module';
 import { PostModule } from './modules/post/post.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -35,6 +37,9 @@ import { PostModule } from './modules/post/post.module';
         const dataSource = await new DataSource(options).initialize();
         return dataSource;
       },
+    }),
+    CacheModule.register({
+      isGlobal: true,
     }),
     TaskModule,
     AuthModule,

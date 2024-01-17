@@ -1,15 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from 'src/database/task.entity';
 import { DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Task)
     private dataSource: DataSource,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(createTaskDto: CreateTaskDto) {
@@ -18,6 +20,9 @@ export class TaskService {
     task.description = createTaskDto.description;
     task.completion_status = createTaskDto.completion_status;
     await this.dataSource.manager.save(task);
+
+    await this.cacheManager.reset();
+
     return {
       message: 'task created',
       task,
@@ -26,6 +31,7 @@ export class TaskService {
 
   async findAll() {
     const tasks = await this.dataSource.manager.find(Task, {});
+    await this.cacheManager.set(`all_tasks`, tasks);
     return {
       message: 'all tasks :',
       tasks,
@@ -36,6 +42,7 @@ export class TaskService {
     const task = await this.dataSource.manager.findOne(Task, {
       where: { id: task_id },
     });
+    await this.cacheManager.set(`task_${task_id}`, task);
     return {
       message: 'find task according to id:',
       task,
@@ -52,6 +59,9 @@ export class TaskService {
     task.description = updateTaskDto.description;
     task.completion_status = updateTaskDto.completion_status;
     await this.dataSource.manager.save(task);
+
+    await this.cacheManager.reset();
+
     return {
       message: 'task updated',
       task,
@@ -60,6 +70,9 @@ export class TaskService {
 
   async remove(id: number) {
     await this.dataSource.manager.softDelete(Task, id);
+
+    await this.cacheManager.reset();
+
     return {
       message: 'task deleted',
     };

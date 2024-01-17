@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/database/comment.entity';
 import { Post } from 'src/database/post.entity';
@@ -16,21 +16,30 @@ export class CommentService {
   ) {}
 
   async create(createCommentDto: CreateCommentDto) {
-    const user = await this.dataSource.manager.findOne(User, {
-      where: { id: createCommentDto.user_id },
-    });
-    if (!user) throw new BadRequestException('user id is wrong');
+    try {
+      const user = await this.dataSource.manager.findOne(User, {
+        where: { id: createCommentDto.user_id },
+      });
+      if (!user) throw new BadRequestException('user id is wrong');
 
-    const post = await this.dataSource.manager.findOne(Post, {
-      where: { id: createCommentDto.user_id },
-    });
-    if (!user) throw new BadRequestException('user id is wrong');
-    const comment = new Comment();
-    comment.content = createCommentDto.content;
-    await this.dataSource.manager.save(comment);
-    return {
-      message: 'comment created',
-      comment,
-    };
+      const post = await this.dataSource.manager.findOne(Post, {
+        where: { id: createCommentDto.user_id },
+      });
+      if (!user) throw new BadRequestException('user id is wrong');
+      const comment = new Comment();
+      comment.content = createCommentDto.content;
+      await this.dataSource.manager.save(comment);
+      return {
+        message: 'comment created',
+        comment,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error?.getStatus?.()
+          ? error.getStatus()
+          : HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

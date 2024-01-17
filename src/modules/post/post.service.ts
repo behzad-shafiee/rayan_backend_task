@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/user.entity';
 import { DataSource } from 'typeorm';
@@ -45,36 +50,54 @@ export class PostService {
   }
 
   async allPostsWithComments() {
-    const queryBuilder = this.dataSource.manager.createQueryBuilder(
-      Post,
-      'post',
-    );
-    const posts = await queryBuilder
-      .leftJoinAndSelect('post.comments', 'comments')
-      .select(['post.title', 'post.content', 'comments.content'])
-      .getRawAndEntities();
-    const query = queryBuilder.getQuery();
-    console.log(query);
+    try {
+      const queryBuilder = this.dataSource.manager.createQueryBuilder(
+        Post,
+        'post',
+      );
+      const posts = await queryBuilder
+        .leftJoinAndSelect('post.comments', 'comments')
+        .select(['post.title', 'post.content', 'comments.content'])
+        .getRawAndEntities();
+      const query = queryBuilder.getQuery();
+      console.log(query);
 
-    return {
-      message: 'all posts with their associated comments',
-      posts,
-    };
+      return {
+        message: 'all posts with their associated comments',
+        posts,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error?.getStatus?.()
+          ? error.getStatus()
+          : HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async countPostOfEachUser() {
-    const queryBuilder = this.dataSource.manager.createQueryBuilder(
-      User,
-      'user',
-    );
-    const result = await queryBuilder
-      .leftJoinAndSelect('user.posts', 'posts')
-      .loadRelationCountAndMap('user.postCount', 'user.posts')
-      .getMany();
+    try {
+      const queryBuilder = this.dataSource.manager.createQueryBuilder(
+        User,
+        'user',
+      );
+      const result = await queryBuilder
+        .leftJoinAndSelect('user.posts', 'posts')
+        .loadRelationCountAndMap('user.postCount', 'user.posts')
+        .getMany();
 
-    return {
-      message: 'total number of posts created by each user',
-      result,
-    };
+      return {
+        message: 'total number of posts created by each user',
+        result,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error?.getStatus?.()
+          ? error.getStatus()
+          : HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

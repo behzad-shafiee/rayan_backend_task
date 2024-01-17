@@ -1,10 +1,10 @@
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from 'src/database/task.entity';
 import { DataSource } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskService {

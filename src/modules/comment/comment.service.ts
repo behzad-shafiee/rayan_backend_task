@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/database/comment.entity';
+import { Post } from 'src/database/post.entity';
+import { User } from 'src/database/user.entity';
 import { DataSource } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { User } from 'src/database/user.entity';
-import { Post } from 'src/database/post.entity';
 
 @Injectable()
 export class CommentService {

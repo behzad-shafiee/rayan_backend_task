@@ -1,22 +1,13 @@
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Inject } from '@nestjs/common';
 import { CompletionStatusEnum } from 'src/enum/completion-status.enum';
-import {
-  BeforeInsert,
-  BeforeSoftRemove,
-  BeforeUpdate,
-  Column,
-  Entity,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { BaseEnt } from './base.entity';
 
 @Entity()
 export class Task extends BaseEnt {
-
-  @Column()
+  @Column({ nullable: false, type: String })
   title: string;
 
-  @Column()
+  @Column({ nullable: true, type: String })
   description: string;
 
   @Column({ type: String, enum: CompletionStatusEnum })

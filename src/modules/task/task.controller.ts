@@ -1,20 +1,18 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Query,
   Put,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
-import { TaskService } from './task.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/guard/jwt-auth.guard';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskService } from './task.service';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

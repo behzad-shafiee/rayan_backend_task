@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CompletionStatusEnum } from 'src/enum/completion-status.enum';
+import { CompletionStatusEnum } from '../../../enum/completion-status.enum';
 
 export class CreateTaskDto {
   @ApiProperty()

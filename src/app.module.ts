@@ -9,6 +9,7 @@ import { CommentModule } from './modules/comment/comment.module';
 import { PostModule } from './modules/post/post.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [

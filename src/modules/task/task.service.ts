@@ -7,7 +7,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Task } from 'src/database/task.entity';
+import { Task } from '../../database/task.entity';
 import { DataSource } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -63,10 +63,10 @@ export class TaskService {
     }
   }
 
-  async findOne(task_id: number) {
+  async findOne(task_id: string) {
     try {
       const task = await this.dataSource.manager.findOne(Task, {
-        where: { id: task_id },
+        where: { id: +task_id },
       });
       if (!task)
         throw new BadRequestException('task with this id does not exist');
@@ -113,9 +113,9 @@ export class TaskService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
-      await this.dataSource.manager.softDelete(Task, id);
+      await this.dataSource.manager.softDelete(Task, +id);
 
       await this.cacheManager.reset();
 

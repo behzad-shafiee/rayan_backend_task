@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
-import JwtAuthGuard from 'src/guard/jwt-auth.guard';
+import JwtAuthGuard from '../../guard/jwt-auth.guard';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskService } from './task.service';
@@ -34,7 +34,7 @@ export class TaskController {
   @Get('one')
   @ApiQuery({ name: 'task_id', type: String })
   findOne(@Query('task_id') task_id: string) {
-    return this.taskService.findOne(+task_id);
+    return this.taskService.findOne(task_id);
   }
 
   @Put()
@@ -45,6 +45,6 @@ export class TaskController {
   @Delete()
   @ApiQuery({ name: 'task_id', type: String })
   remove(@Query('task_id') task_id: string) {
-    return this.taskService.remove(+task_id);
+    return this.taskService.remove(task_id);
   }
 }

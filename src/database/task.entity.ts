@@ -1,4 +1,4 @@
-import { CompletionStatusEnum } from 'src/enum/completion-status.enum';
+import { CompletionStatusEnum } from '../enum/completion-status.enum';
 import { Column, Entity } from 'typeorm';
 import { BaseEnt } from './base.entity';
 

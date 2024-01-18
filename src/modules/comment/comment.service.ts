@@ -1,4 +1,9 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/database/comment.entity';
 import { Post } from 'src/database/post.entity';
@@ -23,11 +28,14 @@ export class CommentService {
       if (!user) throw new BadRequestException('user id is wrong');
 
       const post = await this.dataSource.manager.findOne(Post, {
-        where: { id: createCommentDto.user_id },
+        where: { id: createCommentDto.post_id },
       });
-      if (!user) throw new BadRequestException('user id is wrong');
+      if (!post) throw new BadRequestException('post id is wrong');
+
       const comment = new Comment();
       comment.content = createCommentDto.content;
+      comment.post = post;
+      comment.user = user;
       await this.dataSource.manager.save(comment);
       return {
         message: 'comment created',

@@ -1,15 +1,13 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TaskMiddleware } from './middleware/task.middleware';
-import { AuthModule } from './modules/auth/auth.module';
-import { TaskModule } from './modules/task/task.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { TaskMiddleware } from './middleware/task.middleware';
+import { AuthModule } from './modules/auth/auth.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { PostModule } from './modules/post/post.module';
-import { CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
-import { TaskModule } from './task/task.module';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -47,8 +45,6 @@ import { TaskModule } from './task/task.module';
     CommentModule,
     PostModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
